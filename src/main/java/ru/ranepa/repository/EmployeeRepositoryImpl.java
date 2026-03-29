@@ -6,31 +6,36 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class EmployeeRepositoryImpl implements EmployeeRepository{
+public class EmployeeRepositoryImpl implements EmployeeRepository {
 
-    private Map<Long, Employee> employees = new HashMap<>(); //Список ключ-значение
+    private final Map<Long, Employee> employees = new HashMap<>(); //Список ключ-значение
 
-    private static Long nextId = 1L;
+    private static long nextId = 1;
 
     @Override
-    public String save(Employee employee) {
-        employee.setId(nextId++);
-        employees.put(employee.getId(), employee);
-        return "Employee "+employee.getId()+" was saved successful";
+    public boolean save(Employee employee) {
+        long id = nextId++;
+        employee.setId(id);
+        employees.put(id, employee);
+        return true;
     }
 
     @Override
-    public Optional<Employee> findById(Long id) {
-        return Optional.of(employees.get(id));
+    public Optional<Employee> findById(long id) {
+        return Optional.ofNullable(employees.get(id));
     }
 
     @Override
     public Iterable<Employee> findAll() {
-        return null;
+        return employees.values();
     }
 
     @Override
-    public String delete(Long id) {
-        return "";
+    public boolean delete(long id) {
+        if (employees.containsKey(id)) {
+            employees.remove(id);
+            return true;
+        }
+        return false;
     }
 }
