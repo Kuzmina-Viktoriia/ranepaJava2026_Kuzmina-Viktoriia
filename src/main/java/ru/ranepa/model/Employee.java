@@ -3,6 +3,8 @@ package ru.ranepa.model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import static java.math.BigDecimal.ZERO;
+
 public class Employee {
     private Long id;
     private String name;
@@ -10,24 +12,27 @@ public class Employee {
     private BigDecimal salary;
     private LocalDate hireDate;
 
+
     //alt+insert or Command+N - конструктор
-    public Employee(String name, String position, double salary, LocalDate hireDate) {
+    public Employee(String name, String position, BigDecimal salary, LocalDate hireDate) {
+        boolean isIncorrect = isNameIncorrect(name)
+                || isPositionIncorrect(position)
+                || isSalaryIncorrect(salary)
+                || isHireDateIncorrect(hireDate);
+        if (isIncorrect) {
+            throw new IllegalArgumentException();
+        }
         this.name = name;
         this.position = position;
-        this.salary = BigDecimal.valueOf(salary);
+        this.salary = salary;
         this.hireDate = hireDate;
     }
 
     //alt+insert or Command+N -> toString(), предоставляется классом-родителем Object отсюда надпись Override
     @Override
     public String toString() {
-        return "Employee{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", position='" + position + '\'' +
-                ", salary=" + salary +
-                ", hireDate=" + hireDate +
-                '}';
+        return String.format("Employee{id=%s, name='%s', position='%s', salary=%s, hireDate=%s}",
+                id, name, position, salary, hireDate);
     }
 
     public Long getId() {
@@ -43,6 +48,9 @@ public class Employee {
     }
 
     public void setName(String name) {
+        if (isNameIncorrect(name)) {
+            throw new IllegalArgumentException();
+        }
         this.name = name;
     }
 
@@ -51,6 +59,9 @@ public class Employee {
     }
 
     public void setPosition(String position) {
+        if (isPositionIncorrect(position)) {
+            throw new IllegalArgumentException();
+        }
         this.position = position;
     }
 
@@ -59,6 +70,9 @@ public class Employee {
     }
 
     public void setSalary(BigDecimal salary) {
+        if (isSalaryIncorrect(salary)) {
+            throw new IllegalArgumentException();
+        }
         this.salary = salary;
     }
 
@@ -67,6 +81,25 @@ public class Employee {
     }
 
     public void setHireDate(LocalDate hireDate) {
+        if (isHireDateIncorrect(hireDate)) {
+            throw new IllegalArgumentException();
+        }
         this.hireDate = hireDate;
+    }
+
+    private static boolean isNameIncorrect(String name) {
+        return name == null || name.isEmpty();
+    }
+
+    private static boolean isPositionIncorrect(String position) {
+        return position == null || position.isEmpty();
+    }
+
+    private static boolean isSalaryIncorrect(BigDecimal salary) {
+        return salary == null || salary.compareTo(ZERO) < 0;
+    }
+
+    private static boolean isHireDateIncorrect(LocalDate hireDate) {
+        return hireDate == null;
     }
 }
