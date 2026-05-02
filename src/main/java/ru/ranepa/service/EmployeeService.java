@@ -1,5 +1,7 @@
 package ru.ranepa.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ru.ranepa.model.Employee;
 import ru.ranepa.repository.EmployeeRepository;
 
@@ -12,9 +14,11 @@ import java.util.Optional;
 import static java.math.BigDecimal.ZERO;
 import static java.math.RoundingMode.HALF_UP;
 
+@Component
 public class EmployeeService { // Cmd + Shift + T - создать тест/перейти к тесту
     private final EmployeeRepository employeeRepository;
 
+    @Autowired
     public EmployeeService(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
     }

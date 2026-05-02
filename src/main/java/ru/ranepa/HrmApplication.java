@@ -1,5 +1,7 @@
 package ru.ranepa;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import ru.ranepa.presentation.UserCommunicationProcess;
 import ru.ranepa.repository.EmployeeRepository;
 import ru.ranepa.repository.EmployeeRepositoryImpl;
@@ -8,15 +10,17 @@ import ru.ranepa.service.EmployeeUploader;
 
 import java.io.IOException;
 
+@SpringBootApplication
 public class HrmApplication {
     public static void main(String[] args) throws IOException {
-        EmployeeRepository repository = new EmployeeRepositoryImpl();
-        EmployeeService service = new EmployeeService(repository);
-        UserCommunicationProcess userCommunicationProcess = new UserCommunicationProcess(service);
-
-        userCommunicationProcess.start();
-
-        EmployeeUploader uploader = new EmployeeUploader(repository);
-        uploader.upload();
+        SpringApplication.run(HrmApplication.class, args);
+//        EmployeeRepository repository = new EmployeeRepositoryImpl();
+//        EmployeeService service = new EmployeeService(repository);
+//        UserCommunicationProcess userCommunicationProcess = new UserCommunicationProcess(service);
+//
+//        userCommunicationProcess.start();
+//
+//        EmployeeUploader uploader = new EmployeeUploader(repository);
+//        uploader.upload();
     }
 }

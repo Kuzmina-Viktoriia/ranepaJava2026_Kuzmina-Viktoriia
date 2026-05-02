@@ -102,4 +102,8 @@ public class Employee {
     private static boolean isHireDateIncorrect(LocalDate hireDate) {
         return hireDate == null;
     }
+
+//    public static void hello (){
+//        System.out.println("Hello!");
+//    }
 }

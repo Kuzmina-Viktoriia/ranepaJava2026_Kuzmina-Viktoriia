@@ -1,11 +1,13 @@
 package ru.ranepa.repository;
 
+import org.springframework.stereotype.Component;
 import ru.ranepa.model.Employee;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+@Component
 public class EmployeeRepositoryImpl implements EmployeeRepository {
 
     private final Map<Long, Employee> employees = new HashMap<>(); //Список ключ-значение
