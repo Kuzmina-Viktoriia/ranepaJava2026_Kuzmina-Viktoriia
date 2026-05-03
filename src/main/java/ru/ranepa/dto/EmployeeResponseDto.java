@@ -1,4 +1,4 @@
-package ru.ranepa.model;
+package ru.ranepa.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

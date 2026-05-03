@@ -1,4 +1,4 @@
-package ru.ranepa.model;
+package ru.ranepa.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

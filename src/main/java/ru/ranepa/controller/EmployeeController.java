@@ -1,12 +1,12 @@
-package ru.ranepa;
+package ru.ranepa.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.ranepa.model.Employee;
-import ru.ranepa.model.EmployeeRequestDto;
-import ru.ranepa.model.EmployeeResponseDto;
-import ru.ranepa.model.EmployeeStatsDto;
+import ru.ranepa.dto.EmployeeRequestDto;
+import ru.ranepa.dto.EmployeeResponseDto;
+import ru.ranepa.dto.EmployeeStatsDto;
 import ru.ranepa.service.EmployeeService;
 
 import java.util.LinkedList;
