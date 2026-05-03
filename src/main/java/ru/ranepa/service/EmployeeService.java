@@ -1,6 +1,8 @@
 package ru.ranepa.service;
 
+import org.springdoc.core.mixins.SortedOpenAPIMixin;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.ranepa.model.Employee;
 import ru.ranepa.repository.EmployeeRepository;
@@ -13,6 +15,7 @@ import java.util.Optional;
 
 import static java.math.BigDecimal.ZERO;
 import static java.math.RoundingMode.HALF_UP;
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @Service
 public class EmployeeService { // Cmd + Shift + T - создать тест/перейти к тесту
@@ -49,7 +52,7 @@ public class EmployeeService { // Cmd + Shift + T - создать тест/пе
     }
 
     public Iterable<Employee> getAllEmployees() {
-        return employeeRepository.findAll();
+        return employeeRepository.findAll(Sort.by("id"));
     }
 
     public BigDecimal calculateAverageSalary() {
@@ -81,7 +84,6 @@ public class EmployeeService { // Cmd + Shift + T - создать тест/пе
 
     public List<Employee> findAllByPosition(String position) {
         List<Employee> employeesWithPosition = new LinkedList<>();
-
         for (Employee employee : employeeRepository.findByPosition(position)) {
             employeesWithPosition.add(employee);
         }
