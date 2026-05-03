@@ -3,10 +3,10 @@ package ru.ranepa.controller;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.ranepa.model.Employee;
 import ru.ranepa.dto.EmployeeRequestDto;
 import ru.ranepa.dto.EmployeeResponseDto;
 import ru.ranepa.dto.EmployeeStatsDto;
+import ru.ranepa.model.Employee;
 import ru.ranepa.service.EmployeeService;
 
 import java.util.LinkedList;
@@ -45,8 +45,11 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public boolean addEmployee(@Valid @RequestBody EmployeeRequestDto employeeRequestDto) {
-        return service.addEmployee(employeeRequestDto.name, employeeRequestDto.position, employeeRequestDto.salary, employeeRequestDto.hireDate);
+    public ResponseEntity<Boolean> addEmployee(@Valid @RequestBody EmployeeRequestDto employeeRequestDto) {
+        if (service.addEmployee(employeeRequestDto.name, employeeRequestDto.position, employeeRequestDto.salary, employeeRequestDto.hireDate)) {
+            return ResponseEntity.status(201).body(true);
+        }
+        return ResponseEntity.status(400).body(false);
     }
 
     @DeleteMapping("/{id}")
