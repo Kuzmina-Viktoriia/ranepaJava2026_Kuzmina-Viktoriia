@@ -1,17 +1,28 @@
 package ru.ranepa.model;
 
+import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static java.math.BigDecimal.ZERO;
 
+@Entity
+@Table(name = "employees")
 public class Employee {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String position;
     private BigDecimal salary;
     private LocalDate hireDate;
+    private LocalDateTime createdAt;
 
+
+    protected Employee() {
+    }
 
     //alt+insert or Command+N - конструктор
     public Employee(String name, String position, BigDecimal salary, LocalDate hireDate) {
@@ -87,6 +98,15 @@ public class Employee {
         this.hireDate = hireDate;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
+
     private static boolean isNameIncorrect(String name) {
         return name == null || name.isEmpty();
     }
@@ -102,8 +122,4 @@ public class Employee {
     private static boolean isHireDateIncorrect(LocalDate hireDate) {
         return hireDate == null;
     }
-
-//    public static void hello (){
-//        System.out.println("Hello!");
-//    }
 }

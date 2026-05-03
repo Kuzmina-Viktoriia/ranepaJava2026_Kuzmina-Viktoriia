@@ -1,7 +1,7 @@
 package ru.ranepa.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import ru.ranepa.model.Employee;
 import ru.ranepa.repository.EmployeeRepository;
 
@@ -14,7 +14,7 @@ import java.util.Optional;
 import static java.math.BigDecimal.ZERO;
 import static java.math.RoundingMode.HALF_UP;
 
-@Component
+@Service
 public class EmployeeService { // Cmd + Shift + T - создать тест/перейти к тесту
     private final EmployeeRepository employeeRepository;
 
@@ -35,11 +35,13 @@ public class EmployeeService { // Cmd + Shift + T - создать тест/пе
         }
 
         Employee employee = new Employee(name, position, salary, hireDate);
-        return employeeRepository.save(employee);
+        Employee savedEmployee = employeeRepository.save(employee);
+        return savedEmployee.getId() != null;
     }
 
     public boolean deleteEmployee(long id) {
-        return employeeRepository.delete(id);
+        employeeRepository.deleteById(id);
+        return true;
     }
 
     public Optional<Employee> findEmployeeById(long id) {
@@ -80,10 +82,8 @@ public class EmployeeService { // Cmd + Shift + T - создать тест/пе
     public List<Employee> findAllByPosition(String position) {
         List<Employee> employeesWithPosition = new LinkedList<>();
 
-        for (Employee employee : employeeRepository.findAll()) {
-            if (employee.getPosition().equalsIgnoreCase(position)) {
-                employeesWithPosition.add(employee);
-            }
+        for (Employee employee : employeeRepository.findByPosition(position)) {
+            employeesWithPosition.add(employee);
         }
 
         return employeesWithPosition;

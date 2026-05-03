@@ -2,17 +2,10 @@ package ru.ranepa;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import ru.ranepa.presentation.UserCommunicationProcess;
-import ru.ranepa.repository.EmployeeRepository;
-import ru.ranepa.repository.EmployeeRepositoryImpl;
-import ru.ranepa.service.EmployeeService;
-import ru.ranepa.service.EmployeeUploader;
-
-import java.io.IOException;
 
 @SpringBootApplication
 public class HrmApplication {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         SpringApplication.run(HrmApplication.class, args);
 //        EmployeeRepository repository = new EmployeeRepositoryImpl();
 //        EmployeeService service = new EmployeeService(repository);

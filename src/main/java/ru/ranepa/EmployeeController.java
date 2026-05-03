@@ -1,18 +1,20 @@
 package ru.ranepa;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import ru.ranepa.model.Employee;
+import ru.ranepa.model.EmployeeRequestDto;
+import ru.ranepa.model.EmployeeResponseDto;
+import ru.ranepa.model.EmployeeStatsDto;
 import ru.ranepa.service.EmployeeService;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
+@RequestMapping("/api/employees")
 public class EmployeeController {
     private final EmployeeService service;
 
@@ -20,25 +22,69 @@ public class EmployeeController {
         this.service = service;
     }
 
-    @GetMapping("/api/employees")
-    public List<Employee> allEmployees() {
-        LinkedList<Employee> employees = new LinkedList<>();
+    @GetMapping
+    public List<EmployeeResponseDto> allEmployees() {
+        LinkedList<EmployeeResponseDto> employeesDto = new LinkedList<>();
         for (Employee employee : service.getAllEmployees()) {
-            employees.add(employee);
+            EmployeeResponseDto dto = employeeToDto(employee);
+            employeesDto.add(dto);
         }
-        return employees;
+        return employeesDto;
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<EmployeeResponseDto> employeeById(@PathVariable("id") long id) {
+        Optional<Employee> optionalEmployee = service.findEmployeeById(id);
 
-    @PostMapping("/api/employees")
-    public boolean addEmployee(@RequestBody EmployeeInfo employeeInfo) {
-        return service.addEmployee(employeeInfo.name, employeeInfo.position, employeeInfo.salary, employeeInfo.hireDate);
+        if (optionalEmployee.isEmpty()) {
+            return ResponseEntity.status(404).build();
+        } else {
+            EmployeeResponseDto dto = employeeToDto(optionalEmployee.get());
+            return ResponseEntity.status(200).body(dto);
+        }
     }
 
-    public static class EmployeeInfo {
-        public String name;
-        public String position;
-        public BigDecimal salary;
-        public LocalDate hireDate;
+    @PostMapping
+    public boolean addEmployee(@Valid @RequestBody EmployeeRequestDto employeeRequestDto) {
+        return service.addEmployee(employeeRequestDto.name, employeeRequestDto.position, employeeRequestDto.salary, employeeRequestDto.hireDate);
+    }
+
+    @DeleteMapping("/{id}")
+    public boolean deleteEmployee(@PathVariable("id") long id) {
+        return service.deleteEmployee(id);
+    }
+
+    @GetMapping("/position/{position}")
+    public List<EmployeeResponseDto> employeeByPosition(@PathVariable("position") String position) {
+        List<Employee> listEmployee = service.findAllByPosition(position);
+        List<EmployeeResponseDto> listDtoEmployee = new LinkedList<>();
+        for (Employee employee : listEmployee) {
+            listDtoEmployee.add(employeeToDto(employee));
+        }
+        return listDtoEmployee;
+    }
+
+    @GetMapping("/stats")
+    public EmployeeStatsDto statistics() {
+        EmployeeStatsDto employeeStatsDto = new EmployeeStatsDto();
+        Optional<Employee> optionalEmployee = service.findTopSalaryEmployee();
+        if (optionalEmployee.isEmpty()) {
+            employeeStatsDto.topSalaryEmployee = null;
+        } else {
+            employeeStatsDto.topSalaryEmployee = employeeToDto(optionalEmployee.get());
+        }
+        employeeStatsDto.averageSalary = service.calculateAverageSalary();
+        return employeeStatsDto;
+    }
+
+    private EmployeeResponseDto employeeToDto(Employee employee) {
+        EmployeeResponseDto employeeResponseDto = new EmployeeResponseDto();
+        employeeResponseDto.id = employee.getId();
+        employeeResponseDto.name = employee.getName();
+        employeeResponseDto.position = employee.getPosition();
+        employeeResponseDto.salary = employee.getSalary();
+        employeeResponseDto.hireDate = employee.getHireDate();
+        employeeResponseDto.createdAt = employee.getCreatedAt();
+        return employeeResponseDto;
     }
 }
